@@ -1,0 +1,1 @@
+INSERT INTO products (id, name, short_description, detailed_description, price, category) VALUES(1, 'scaphandre vintage', 'taille M', 'a appartenu au plus grand des plongeurs', 80000, 'sous-marin');
