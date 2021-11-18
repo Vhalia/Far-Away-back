@@ -12,4 +12,8 @@ public class CommentService {
     private CommentRepository repo;
 
     public Iterable<Comment> findAll() {return repo.findAll();}
+
+    public Iterable<Comment> findAllByIdProductAndNotIdUser(int idProduct, int idUser) {
+        return repo.findAllByIdProductAndNotIdUser(idProduct, idUser);
+    }
 }
