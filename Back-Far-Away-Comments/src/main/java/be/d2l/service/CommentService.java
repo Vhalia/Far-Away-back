@@ -16,4 +16,6 @@ public class CommentService {
     public Iterable<Comment> findAllByIdProductAndNotIdUser(int idProduct, int idUser) {
         return repo.findAllByIdProductAndIdUserNot(idProduct, idUser);
     }
+
+    public Comment save(Comment newComment) {return repo.save(newComment);}
 }

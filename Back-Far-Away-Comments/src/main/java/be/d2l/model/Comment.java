@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity(name="comments")
 @Data
@@ -23,4 +23,10 @@ public class Comment {
     private int idProduct;
 
     public Comment() {}
+
+    public boolean isValid() {
+        return text != null && !text.isEmpty() && !text.isBlank()
+            && rating != null && !rating.isEmpty() && !rating.isBlank()
+                && idUser >= 0 && idProduct >= 0;
+    }
 }

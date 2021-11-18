@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.PathParam;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/comments")
@@ -24,5 +25,16 @@ public class CommentController {
     public Iterable<Comment> getCommentsByIdProductExceptUser(@PathVariable("idProduct") int idProduct,
                                                               @RequestParam(required = false) int idUser) {
         return service.findAllByIdProductAndNotIdUser(idProduct, idUser);
+    }
+
+    @PostMapping
+    public ResponseEntity<Comment> addComment(@RequestBody Comment newComment) {
+        if (newComment == null)
+            return ResponseEntity.noContent().build();
+        else if(!newComment.isValid())
+            return ResponseEntity.badRequest().build();
+        newComment.setCreationDate(new Date());
+        newComment.setDeleted(false);
+        return ResponseEntity.ok(service.save(newComment));
     }
 }
