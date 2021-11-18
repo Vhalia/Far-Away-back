@@ -10,4 +10,8 @@ import java.util.List;
 public interface ProductRepository extends CrudRepository<Product, Integer> {
 
     List<Product> findByPriceBetween(float price1, float price2);
+
+    List<Product> findByCategoryAndPriceBetween(String category, float price1, float price2);
+
+    List<Product> findByCategory(String category);
 }

@@ -17,16 +17,42 @@ public class ProductService {
         return repo.findAll();
     }
 
+    /**
+     * filter products by the price
+     * @param min price minimum
+     * @param max price maximum
+     * @return a list of products
+     */
+    public Iterable<Product> findWithPriceFilterMode(float min, float max){
+        return repo.findByPriceBetween(min, max);
+    }
+
+    /**
+     * filter products by the price and the category
+     * @param category the category of a product
+     * @param min price minimum
+     * @param max price maximum
+     * @return a list of products
+     */
+    public Iterable<Product> findWithFilterMode(String category, float min, float max){
+        return repo.findByCategoryAndPriceBetween(category, min, max);
+    }
+
+    /**
+     * filter products by the category
+     * @param category the category of a product
+     * @return a list of products
+     */
+    public Iterable<Product> findByCategory(String category) {
+        return repo.findByCategory(category);
+    }
+
     public Product findById(int id) {
         return repo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "No object with this id: " + id));
     }
 
-    /*public Iterable<Product> findByCategory(String category) {
-        return repo.findByCategory(category);
-    }
-    */
-    public Product saveKit(Product product) {
+    public Product saveProduct(Product product) {
         return repo.save(product);
     }
 
