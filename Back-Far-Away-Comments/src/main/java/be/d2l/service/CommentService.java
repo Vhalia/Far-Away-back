@@ -1,5 +1,6 @@
 package be.d2l.service;
 
+import be.d2l.customExceptions.CommentNotFoundException;
 import be.d2l.model.Comment;
 import be.d2l.repo.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,4 +19,9 @@ public class CommentService {
     }
 
     public Comment save(Comment newComment) {return repo.save(newComment);}
+
+    public void deleteComment(int idComment) throws CommentNotFoundException{
+        if (!repo.existsById(idComment)) throw new CommentNotFoundException("no comment with id "+ idComment);
+        repo.deleteById(idComment);
+    }
 }
