@@ -24,4 +24,12 @@ public class CommentService {
         if (!repo.existsById(idComment)) throw new CommentNotFoundException("no comment with id "+ idComment);
         repo.deleteById(idComment);
     }
+
+    public Comment putComment(int idComment, Comment updateComment) throws CommentNotFoundException {
+        Comment commentToUpdate = repo.findById(idComment).orElseThrow(() -> new CommentNotFoundException("No comment with id " + idComment));
+        commentToUpdate.setDeleted(updateComment.isDeleted());
+        if(updateComment.getText() != null)
+            commentToUpdate.setText(updateComment.getText());
+        return repo.save(commentToUpdate);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import java.net.URI;
 import java.util.Date;
@@ -52,5 +53,17 @@ public class CommentController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("{idComment}")
+    public ResponseEntity<Comment> updateComment(@PathVariable("idComment") int idComment, @RequestBody Comment updateComment) {
+        //TODO : fix handle no content
+        if (updateComment == null) return ResponseEntity.noContent().build();
+        else if (idComment < 0) return ResponseEntity.badRequest().build();
+        try {
+            return ResponseEntity.ok(service.putComment(idComment, updateComment));
+        }catch(CommentNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
