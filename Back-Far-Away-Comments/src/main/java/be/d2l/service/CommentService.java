@@ -15,15 +15,15 @@ public class CommentService {
     public Iterable<Comment> findAllOrderByMostRecent() {return repo.findAllByOrderByCreationDateDesc();}
 
     public Iterable<Comment> findAllByIdProductAndNotIdUser(int idProduct, int idUser) {
-        return repo.findAllByIdProductAndIdUserNot(idProduct, idUser);
+        return repo.findAllByIdProductAndIdUserNotOrderByCreationDateDesc(idProduct, idUser);
     }
 
     public Iterable<Comment> findAllByIdProduct(int idProduct) {
-        return repo.findALlByIdProduct(idProduct);
+        return repo.findALlByIdProductOrderByCreationDateDesc(idProduct);
     }
 
     public Iterable<Comment> findAllByIdProductAndIdUser(int idProduct, int idUser) {
-        return repo.findAllByIdProductAndIdUser(idProduct, idUser);
+        return repo.findAllByIdProductAndIdUserOrderByCreationDateDesc(idProduct, idUser);
     }
 
     public Comment save(Comment newComment) {return repo.save(newComment);}

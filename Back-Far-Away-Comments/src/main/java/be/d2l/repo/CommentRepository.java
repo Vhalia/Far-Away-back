@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends CrudRepository<Comment, Integer>{
     public Iterable<Comment> findAllByOrderByCreationDateDesc();
-    public Iterable<Comment> findAllByIdProductAndIdUserNot(int idProduct, int idUser);
-    public Iterable<Comment> findAllByIdProductAndIdUser(int idProduct, int idUser);
-    public Iterable<Comment> findALlByIdProduct(int idProduct);
+    public Iterable<Comment> findAllByIdProductAndIdUserNotOrderByCreationDateDesc(int idProduct, int idUser);
+    public Iterable<Comment> findAllByIdProductAndIdUserOrderByCreationDateDesc(int idProduct, int idUser);
+    public Iterable<Comment> findALlByIdProductOrderByCreationDateDesc(int idProduct);
 }
