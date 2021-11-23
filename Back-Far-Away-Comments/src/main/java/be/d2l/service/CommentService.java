@@ -3,7 +3,6 @@ package be.d2l.service;
 import be.d2l.customExceptions.CommentNotFoundException;
 import be.d2l.model.Comment;
 import be.d2l.repo.CommentRepository;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class CommentService {
     }
 
     public Iterable<Comment> findAllByIdProduct(int idProduct) {
-        return repo.findALlByIdProductOrderByCreationDateDesc(idProduct);
+        return repo.findAllByIdProductOrderByCreationDateDesc(idProduct);
     }
 
     public Iterable<Comment> findAllByIdProductAndIdUser(int idProduct, int idUser) {
@@ -50,7 +49,7 @@ public class CommentService {
     }
 
     public double averageRatingOfCommentByIdProduct(int idProduct) throws CommentNotFoundException {
-        List<Comment> commentsOfProduct = (List<Comment>)repo.findALlByIdProductOrderByCreationDateDesc(idProduct);
+        List<Comment> commentsOfProduct = (List<Comment>)repo.findAllByIdProductOrderByCreationDateDesc(idProduct);
         if(commentsOfProduct == null || commentsOfProduct.isEmpty()) throw new CommentNotFoundException("No comment for product with id " + idProduct);
         return commentsOfProduct.stream().mapToInt(Comment::getRating).average().orElseThrow(() -> new ArithmeticException("Average is not a double"));
     }
