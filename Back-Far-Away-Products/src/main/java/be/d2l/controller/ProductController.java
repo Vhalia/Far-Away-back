@@ -19,56 +19,59 @@ public class ProductController {
     private ProductService service;
 
     @GetMapping()
-    public Iterable<Product> getProducts(@RequestParam(required = false) String category,
+    public ResponseEntity<Iterable<Product>> getProducts(@RequestParam(required = false) String category,
                                          @RequestParam(required = false, defaultValue = "0")float min,
                                          @RequestParam(required = false, defaultValue = "0") float max,
                                          @RequestParam(required = false) String order){
+        if((order != null && (!order.equals("ASC") || !order.equals("DESC")) || min < 0 || max < 0){
+            return ResponseEntity.badRequest().build();
+        }
         if(order != null && order.equals("ASC")){
             if(category != null){
                 if(max != 0){
                     //liste filtrée pour une categorie et par prix
-                    return service.findWithFilterModeAsc(category, min, max);
+                    return ResponseEntity.ok(service.findWithFilterModeAsc(category, min, max));
                 }
                 //liste filtrée par categorie
-                return service.findByCategoryAsc(category);
+                return ResponseEntity.ok(service.findByCategoryAsc(category));
             }
             if(max != 0) {
                 //liste filtrée par prix
-                return service.findWithPriceFilterModeAsc(min, max);
+                return ResponseEntity.ok(service.findWithPriceFilterModeAsc(min, max));
             }
             //liste triée asc
-            return service.findAllAsc();
+            return ResponseEntity.ok(service.findAllAsc());
         }
         if(order != null && order.equals("DESC")){
             if(category != null){
                 if(max != 0){
                     //liste filtrée pour une categorie et par prix
-                    return service.findWithFilterModeDesc(category, min, max);
+                    return ResponseEntity.ok(service.findWithFilterModeDesc(category, min, max));
                 }
                 //liste filtrée par categorie
-                return service.findByCategoryDesc(category);
+                return ResponseEntity.ok(service.findByCategoryDesc(category));
             }
             if(max != 0) {
                 //liste filtrée par prix
-                return service.findWithPriceFilterModeDesc(min, max);
+                return ResponseEntity.ok(service.findWithPriceFilterModeDesc(min, max));
             }
             //liste triée desc
-            return service.findAllDesc();
+            return ResponseEntity.ok(service.findAllDesc());
         }
         if(category != null){
             if(max != 0){
                 //liste filtrée pour une categorie et par prix
-                return service.findWithFilterMode(category, min, max);
+                return ResponseEntity.ok(service.findWithFilterMode(category, min, max));
             }
             //liste filtrée par categorie
-            return service.findByCategory(category);
+            return ResponseEntity.ok(service.findByCategory(category));
         }
         if(max != 0) {
             //liste filtrée par prix
-            return service.findWithPriceFilterMode(min, max);
+            return ResponseEntity.ok(service.findWithPriceFilterMode(min, max));
         }
         //liste sans filtre
-        return service.findAll();
+        return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
