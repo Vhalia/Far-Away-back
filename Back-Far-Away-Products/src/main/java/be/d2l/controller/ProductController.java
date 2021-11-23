@@ -23,7 +23,7 @@ public class ProductController {
                                          @RequestParam(required = false, defaultValue = "0")float min,
                                          @RequestParam(required = false, defaultValue = "0") float max,
                                          @RequestParam(required = false) String order){
-        if((order != null && (!order.equals("ASC") || !order.equals("DESC")) || min < 0 || max < 0){
+        if((order != null && (!order.equals("ASC") || !order.equals("DESC"))) || min < 0 || max < 0 || max < min){
             return ResponseEntity.badRequest().build();
         }
         if(order != null && order.equals("ASC")){
