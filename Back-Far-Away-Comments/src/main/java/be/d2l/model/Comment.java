@@ -18,13 +18,13 @@ public class Comment {
     private String text;
     private String rating;
     private Date creationDate;
-    private boolean isDeleted;
+    private Boolean isDeleted;
     private int idUser;
     private int idProduct;
 
     public Comment() {}
 
-    public boolean isValid() {
+    public boolean checkValidity() {
         return text != null && !text.isEmpty() && !text.isBlank()
             && rating != null && !rating.isEmpty() && !rating.isBlank()
                 && idUser >= 0 && idProduct >= 0;

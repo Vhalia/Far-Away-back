@@ -12,7 +12,7 @@ public class CommentService {
     @Autowired
     private CommentRepository repo;
 
-    public Iterable<Comment> findAll() {return repo.findAll();}
+    public Iterable<Comment> findAllOrderByMostRecent() {return repo.findAllByOrderByCreationDateDesc();}
 
     public Iterable<Comment> findAllByIdProductAndNotIdUser(int idProduct, int idUser) {
         return repo.findAllByIdProductAndIdUserNot(idProduct, idUser);
@@ -27,7 +27,8 @@ public class CommentService {
 
     public Comment putComment(int idComment, Comment updateComment) throws CommentNotFoundException {
         Comment commentToUpdate = repo.findById(idComment).orElseThrow(() -> new CommentNotFoundException("No comment with id " + idComment));
-        commentToUpdate.setDeleted(updateComment.isDeleted());
+        if (updateComment.getIsDeleted() != null)
+            commentToUpdate.setIsDeleted(updateComment.getIsDeleted());
         if(updateComment.getText() != null)
             commentToUpdate.setText(updateComment.getText());
         return repo.save(commentToUpdate);

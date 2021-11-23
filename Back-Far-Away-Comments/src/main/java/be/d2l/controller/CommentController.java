@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
 import java.net.URI;
 import java.util.Date;
 
@@ -22,7 +20,7 @@ public class CommentController {
 
     @GetMapping
     public Iterable<Comment> getComments() {
-        return service.findAll();
+        return service.findAllOrderByMostRecent();
     }
 
     @GetMapping("{idProduct}")
@@ -35,10 +33,10 @@ public class CommentController {
     public ResponseEntity<Comment> addComment(@RequestBody Comment newComment) {
         if (newComment == null)
             return ResponseEntity.noContent().build();
-        else if(!newComment.isValid())
+        else if(!newComment.checkValidity())
             return ResponseEntity.badRequest().build();
         newComment.setCreationDate(new Date());
-        newComment.setDeleted(false);
+        newComment.setIsDeleted(false);
         Comment createdComment = service.save(newComment);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdComment.getId()).toUri();
         return ResponseEntity.created(location).body(createdComment);
@@ -57,7 +55,6 @@ public class CommentController {
 
     @PutMapping("{idComment}")
     public ResponseEntity<Comment> updateComment(@PathVariable("idComment") int idComment, @RequestBody Comment updateComment) {
-        //TODO : fix handle no content
         if (updateComment == null) return ResponseEntity.noContent().build();
         else if (idComment < 0) return ResponseEntity.badRequest().build();
         try {
