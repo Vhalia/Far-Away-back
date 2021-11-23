@@ -16,7 +16,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String text;
-    private String rating;
+    private int rating;
     private Date creationDate;
     private Boolean isDeleted;
     private int idUser;
@@ -26,7 +26,6 @@ public class Comment {
 
     public boolean checkValidity() {
         return text != null && !text.isEmpty() && !text.isBlank()
-            && rating != null && !rating.isEmpty() && !rating.isBlank()
-                && idUser >= 0 && idProduct >= 0;
+                && rating >= 0 && rating <= 5 && idUser >= 0 && idProduct >= 0;
     }
 }

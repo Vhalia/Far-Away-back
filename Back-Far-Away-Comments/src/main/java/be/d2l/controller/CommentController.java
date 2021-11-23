@@ -74,4 +74,20 @@ public class CommentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("count/{idProduct}")
+    public ResponseEntity countCommentsOfProduct(@PathVariable("idProduct") int idProduct) {
+        if (idProduct < 0) return ResponseEntity.badRequest().body("Malformed product id " + idProduct);
+        return ResponseEntity.ok(service.countCommentsByIdProduct(idProduct));
+    }
+
+    @GetMapping("average/{idProduct}")
+    public ResponseEntity averageRatingOfComment(@PathVariable("idProduct") int idProduct) {
+        if (idProduct < 0) return ResponseEntity.badRequest().body("Malformed comment id " + idProduct);
+        try {
+            return ResponseEntity.ok(service.averageRatingOfCommentByIdProduct(idProduct));
+        } catch (CommentNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
