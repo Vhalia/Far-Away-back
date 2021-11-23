@@ -17,7 +17,6 @@ public class AuthorizeFilter extends
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             //Filtre AVANT envoi de la requête ici
-            System.out.println("LA GATEWAY WAAAAAAAAAAAAAAAAAAAAAAAY ");
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
                 //Filtre APRES envoi de la réponse ici
             }));
