@@ -17,7 +17,7 @@ public class Product {
     private String name;
     private String shortDescription;
     private String detailedDescription;
-    private float price;
+    private Float price;
     private String category;
 
     public Product(){

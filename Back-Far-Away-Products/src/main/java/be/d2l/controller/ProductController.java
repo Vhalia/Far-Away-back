@@ -76,6 +76,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable("id") int id) {
+        if(id < 0) return ResponseEntity.badRequest().build();
         try {
             return ResponseEntity.ok(service.findById(id));
         } catch (ProductNotFoundException e) {
@@ -96,7 +97,7 @@ public class ProductController {
         if(id < 0) return ResponseEntity.badRequest().build();
         try{
             service.deleteProduct(id);
-        }catch (Exception e){
+        }catch (ProductNotFoundException e){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
@@ -104,7 +105,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") int id, @RequestBody Product product) {
-        if (product == null) return ResponseEntity.noContent().build();
+        if (product == null) return ResponseEntity.badRequest().build();
         if (id < 0)  return ResponseEntity.badRequest().build();
         try {
             return ResponseEntity.ok(service.updateProduct(id, product));

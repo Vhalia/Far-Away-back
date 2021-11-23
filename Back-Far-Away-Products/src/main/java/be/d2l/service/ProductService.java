@@ -126,9 +126,16 @@ public class ProductService {
 
     public Product updateProduct(int id, Product product) throws ProductNotFoundException {
         Product productGet = repo.findById(id).orElseThrow(()-> new ProductNotFoundException("this product doesn't exist " + id));
-        productGet.setName(product.getName());
-        productGet.setPrice(product.getPrice());
-        productGet.setCategory(product.getCategory());
+        if(product.getName() != null)
+            productGet.setName(product.getName());
+        if(product.getPrice() != null)
+            productGet.setPrice(product.getPrice());
+        if(product.getCategory() != null)
+            productGet.setCategory(product.getCategory());
+        if(product.getDetailedDescription() != null)
+            productGet.setDetailedDescription(product.getDetailedDescription());
+        if(product.getShortDescription() != null)
+            productGet.setShortDescription(product.getShortDescription());
         return repo.save(productGet);
     }
 
