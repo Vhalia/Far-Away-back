@@ -24,17 +24,28 @@ public class CommentController {
     }
 
     @GetMapping("{idProduct}")
-    public Iterable<Comment> getCommentsByIdProductExceptUser(@PathVariable("idProduct") int idProduct,
-                                                              @RequestParam(required = false) int idUser) {
-        return service.findAllByIdProductAndNotIdUser(idProduct, idUser);
+    public ResponseEntity getCommentsByIdProductExceptUser(@PathVariable("idProduct") int idProduct,
+                                                              @RequestParam(required = false) Integer idUser) {
+        if (idProduct < 0) return ResponseEntity.badRequest().body("Malformed product id " + idProduct);
+        if (idUser == null)
+            return ResponseEntity.ok(service.findAllByIdProduct(idProduct));
+        if(idUser < 0 ) return ResponseEntity.badRequest().body("Malformed user id " + idUser);
+        return ResponseEntity.ok(service.findAllByIdProductAndNotIdUser(idProduct, idUser));
+    }
+
+    @GetMapping("{idProduct}/{idUser}")
+    public ResponseEntity getCommentsByIdProductAndIdUser(@PathVariable("idProduct") int idProduct,
+                                                                             @PathVariable("idUser") int idUser) {
+        if(idProduct < 0 || idUser < 0) return ResponseEntity.badRequest().body("Malformed user or product id");
+        return ResponseEntity.ok(service.findAllByIdProductAndIdUser(idProduct, idUser));
     }
 
     @PostMapping
-    public ResponseEntity<Comment> addComment(@RequestBody Comment newComment) {
+    public ResponseEntity addComment(@RequestBody Comment newComment) {
         if (newComment == null)
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.badRequest().body("Empty body");
         else if(!newComment.checkValidity())
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Missing mandatory information");
         newComment.setCreationDate(new Date());
         newComment.setIsDeleted(false);
         Comment createdComment = service.save(newComment);
@@ -43,8 +54,8 @@ public class CommentController {
     }
 
     @DeleteMapping("{idComment}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("idComment") int idComment) {
-        if (idComment < 0) return ResponseEntity.badRequest().build();
+    public ResponseEntity<String> deleteComment(@PathVariable("idComment") int idComment) {
+        if (idComment < 0) return ResponseEntity.badRequest().body("Malformed comment id " + idComment);
         try {
             service.deleteComment(idComment);
         } catch (CommentNotFoundException e) {
@@ -54,9 +65,9 @@ public class CommentController {
     }
 
     @PutMapping("{idComment}")
-    public ResponseEntity<Comment> updateComment(@PathVariable("idComment") int idComment, @RequestBody Comment updateComment) {
-        if (updateComment == null) return ResponseEntity.noContent().build();
-        else if (idComment < 0) return ResponseEntity.badRequest().build();
+    public ResponseEntity updateComment(@PathVariable("idComment") int idComment, @RequestBody Comment updateComment) {
+        if (updateComment == null) return ResponseEntity.badRequest().body("Empty body");
+        else if (idComment < 0) return ResponseEntity.badRequest().body("Malformed comment id " +idComment);
         try {
             return ResponseEntity.ok(service.putComment(idComment, updateComment));
         }catch(CommentNotFoundException e) {

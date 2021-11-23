@@ -18,6 +18,14 @@ public class CommentService {
         return repo.findAllByIdProductAndIdUserNot(idProduct, idUser);
     }
 
+    public Iterable<Comment> findAllByIdProduct(int idProduct) {
+        return repo.findALlByIdProduct(idProduct);
+    }
+
+    public Iterable<Comment> findAllByIdProductAndIdUser(int idProduct, int idUser) {
+        return repo.findAllByIdProductAndIdUser(idProduct, idUser);
+    }
+
     public Comment save(Comment newComment) {return repo.save(newComment);}
 
     public void deleteComment(int idComment) throws CommentNotFoundException{

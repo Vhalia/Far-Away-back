@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface CommentRepository extends CrudRepository<Comment, Integer>{
     public Iterable<Comment> findAllByOrderByCreationDateDesc();
     public Iterable<Comment> findAllByIdProductAndIdUserNot(int idProduct, int idUser);
+    public Iterable<Comment> findAllByIdProductAndIdUser(int idProduct, int idUser);
+    public Iterable<Comment> findALlByIdProduct(int idProduct);
 }
