@@ -86,13 +86,12 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         if (product == null) return ResponseEntity.noContent().build();
-        if (product.getId() < 0) return ResponseEntity.badRequest().build();
         Product savedProduct = service.saveProduct(product);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedProduct.getId()).toUri();
         return ResponseEntity.created(location).body(savedProduct);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") int id) {
         if(id < 0) return ResponseEntity.badRequest().build();
         try{
@@ -103,7 +102,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") int id, @RequestBody Product product) {
         if (product == null) return ResponseEntity.noContent().build();
         if (id < 0)  return ResponseEntity.badRequest().build();
