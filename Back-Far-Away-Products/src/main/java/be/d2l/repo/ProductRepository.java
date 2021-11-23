@@ -14,4 +14,22 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
     List<Product> findByCategoryAndPriceBetween(String category, float price1, float price2);
 
     List<Product> findByCategory(String category);
+
+    List<Product> findByPriceBetweenOrderByPriceAsc(float price1, float price2);
+
+    List<Product> findByCategoryAndPriceBetweenOrderByPriceAsc(String category, float price1, float price2);
+
+    List<Product> findByCategoryOrderByPriceAsc(String category);
+
+    List<Product> findByPriceBetweenOrderByPriceDesc(float price1, float price2);
+
+    List<Product> findByCategoryAndPriceBetweenOrderByPriceDesc(String category, float price1, float price2);
+
+    List<Product> findByCategoryOrderByPriceDesc(String category);
+
+    List<Product> findAllByOrderByPriceAsc();
+
+    List<Product> findAllByOrderByPriceDesc();
+
+
 }

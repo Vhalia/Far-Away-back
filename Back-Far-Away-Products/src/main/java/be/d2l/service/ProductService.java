@@ -1,5 +1,6 @@
 package be.d2l.service;
 
+import be.d2l.customExceptions.ProductNotFoundException;
 import be.d2l.model.Product;
 import be.d2l.repo.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,14 @@ public class ProductService {
 
     public Iterable<Product> findAll() {
         return repo.findAll();
+    }
+
+    public Iterable<Product> findAllAsc() {
+        return repo.findAllByOrderByPriceAsc();
+    }
+
+    public Iterable<Product> findAllDesc() {
+        return repo.findAllByOrderByPriceDesc();
     }
 
     /**
@@ -47,25 +56,84 @@ public class ProductService {
         return repo.findByCategory(category);
     }
 
-    public Product findById(int id) {
-        return repo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "No object with this id: " + id));
+    /**
+     * filter products by the price Order by it ASC
+     * @param min price minimum
+     * @param max price maximum
+     * @return a list of products
+     */
+    public Iterable<Product> findWithPriceFilterModeAsc(float min, float max){
+        return repo.findByPriceBetweenOrderByPriceAsc(min, max);
+    }
+
+    /**
+     * filter products by the price and the category Order by price ASC
+     * @param category the category of a product
+     * @param min price minimum
+     * @param max price maximum
+     * @return a list of products
+     */
+    public Iterable<Product> findWithFilterModeAsc(String category, float min, float max){
+        return repo.findByCategoryAndPriceBetweenOrderByPriceAsc(category, min, max);
+    }
+
+    /**
+     * filter products by the category order by price ASC
+     * @param category the category of a product
+     * @return a list of products
+     */
+    public Iterable<Product> findByCategoryAsc(String category) {
+        return repo.findByCategoryOrderByPriceAsc(category);
+    }
+
+    /**
+     * filter products by the price Order by it DESC
+     * @param min price minimum
+     * @param max price maximum
+     * @return a list of products
+     */
+    public Iterable<Product> findWithPriceFilterModeDesc(float min, float max){
+        return repo.findByPriceBetweenOrderByPriceDesc(min, max);
+    }
+
+    /**
+     * filter products by the price and the category Order by price DESC
+     * @param category the category of a product
+     * @param min price minimum
+     * @param max price maximum
+     * @return a list of products
+     */
+    public Iterable<Product> findWithFilterModeDesc(String category, float min, float max){
+        return repo.findByCategoryAndPriceBetweenOrderByPriceDesc(category, min, max);
+    }
+
+    /**
+     * filter products by the category order by price Order by price DESC
+     * @param category the category of a product
+     * @return a list of products
+     */
+    public Iterable<Product> findByCategoryDesc(String category) {
+        return repo.findByCategoryOrderByPriceDesc(category);
+    }
+
+    public Product findById(int id) throws ProductNotFoundException {
+        return repo.findById(id).orElseThrow(()-> new ProductNotFoundException("this product doesn't exist " + id));
     }
 
     public Product saveProduct(Product product) {
         return repo.save(product);
     }
 
-    public Product updateProduct(int id, Product product) {
-        Product productGet = repo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "No object with this id: " + id));
+    public Product updateProduct(int id, Product product) throws ProductNotFoundException {
+        Product productGet = repo.findById(id).orElseThrow(()-> new ProductNotFoundException("this product doesn't exist " + id));
         productGet.setName(product.getName());
         productGet.setPrice(product.getPrice());
         productGet.setCategory(product.getCategory());
         return repo.save(productGet);
     }
 
-    public void deleteProduct(int id) {
+    public void deleteProduct(int id) throws ProductNotFoundException {
+        if(!repo.existsById(id)) throw new ProductNotFoundException("this product doesn't exist " + id);
         repo.deleteById(id);
     }
 
