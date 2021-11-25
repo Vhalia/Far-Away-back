@@ -19,4 +19,10 @@ public class Basket {
 
     public Basket() {}
 
+    public Basket(int idUser,int idProduct,int quantity){
+        this.idUser = idUser;
+        this.idProduct = idProduct;
+        this.quantity = quantity;
+    }
+
 }

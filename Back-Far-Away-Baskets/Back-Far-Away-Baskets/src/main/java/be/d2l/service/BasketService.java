@@ -15,4 +15,13 @@ public class BasketService {
         return repo.findByIdUser(idUser);
     }
 
+    public void deleteProductOfBasket(int idProduct, int idUser){repo.deleteByIdProductAndidUser(idProduct,idUser); }
+
+    public Iterable<Basket> updateProductQuantity(int quantity,int idProduct, int idUser){
+        return repo.setFixedQuantityFor(quantity,idProduct,idUser);
+    }
+
+    public void addProductToBasket(int idProduct, int idUser){
+        repo.save(new Basket(idUser,idProduct,1));
+    }
 }
