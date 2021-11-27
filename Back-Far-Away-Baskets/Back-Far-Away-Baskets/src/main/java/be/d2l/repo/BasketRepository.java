@@ -8,10 +8,9 @@ import java.util.List;
 @Repository
 public interface BasketRepository extends CrudRepository<Basket,Integer> {
 
-
     List<Basket> findByIdUser(int idUser);
 
-    void deleteByIdProductAndidUser(int idProduct,int idUser);
+    Basket findByIdProductAndIdUser(int idProduct, int idUser);
 
-    List<Basket> setFixedQuantityFor(int quantity, int idArticle, int idUser);
+    boolean existsBasketByIdProductAndIdUser(int idProduct, int idUser);
 }

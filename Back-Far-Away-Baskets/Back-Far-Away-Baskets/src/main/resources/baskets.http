@@ -1,0 +1,24 @@
+GET http://localhost:9001/baskets/1
+
+###
+GET http://localhost:9001/baskets/-1
+
+###
+DELETE http://localhost:9001/baskets/1/1
+
+###
+DELETE http://localhost:9001/baskets/-1/1
+
+###
+DELETE http://localhost:9001/baskets/1/-1
+
+###
+PUT http://localhost:9001/baskets/2/1
+Content-Type: application/json
+
+40000
+
+
+###
+POST http://localhost:9001/baskets/2/1
+
