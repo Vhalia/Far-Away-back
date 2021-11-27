@@ -36,7 +36,6 @@ public class BasketController {
 
     @PutMapping("/{idProduct}/{idUser}")
     public ResponseEntity updateProductQuantity(@RequestBody int quantity, @PathVariable("idProduct") int idProduct, @PathVariable("idUser") int idUser){
-        System.out.println("j'ai trouvé la route");
         if(idProduct < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + idProduct);
         if(idUser < 0) return ResponseEntity.badRequest().body("Malformed id user " + idUser);
         if(quantity < 0 ) return ResponseEntity.badRequest().body("The new quantity is malformed ");
