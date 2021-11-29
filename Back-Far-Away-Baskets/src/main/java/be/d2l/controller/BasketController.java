@@ -23,11 +23,11 @@ public class BasketController {
         return ResponseEntity.ok(baskets);
     }
     @DeleteMapping
-    public ResponseEntity<String> deleteProductOfBasket(@RequestBody Basket newBasket){
-        if(newBasket.getIdProduct() < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + newBasket.getIdProduct());
-        if(newBasket.getIdUser() < 0) return ResponseEntity.badRequest().body("Malformed id user " + newBasket.getIdUser());
+    public ResponseEntity<String> deleteProductOfBasket(@RequestBody Basket BasketToDelete){
+        if(BasketToDelete.getIdProduct() < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + BasketToDelete.getIdProduct());
+        if(BasketToDelete.getIdUser() < 0) return ResponseEntity.badRequest().body("Malformed id user " + BasketToDelete.getIdUser());
         try{
-            service.deleteProductOfBasket(newBasket);
+            service.deleteProductOfBasket(BasketToDelete);
         }catch (BasketNotFoundException e){
             return ResponseEntity.notFound().build();
         }
@@ -35,12 +35,12 @@ public class BasketController {
     }
 
     @PutMapping
-    public ResponseEntity updateProductQuantity(@RequestBody Basket newBasket, @RequestParam int quantity){
-        if(newBasket.getIdProduct() < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + newBasket.getIdProduct());
-        if(newBasket.getIdUser() < 0) return ResponseEntity.badRequest().body("Malformed id user " + newBasket.getIdUser());
+    public ResponseEntity updateProductQuantity(@RequestBody Basket BasketToUpdate, @RequestParam int quantity){
+        if(BasketToUpdate.getIdProduct() < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + BasketToUpdate.getIdProduct());
+        if(BasketToUpdate.getIdUser() < 0) return ResponseEntity.badRequest().body("Malformed id user " + BasketToUpdate.getIdUser());
         if(quantity < 0 ) return ResponseEntity.badRequest().body("The new quantity is malformed ");
         try{
-            return ResponseEntity.ok(service.updateProductQuantity(quantity,newBasket));
+            return ResponseEntity.ok(service.updateProductQuantity(quantity,BasketToUpdate));
         }catch (BasketNotFoundException e){
             return ResponseEntity.notFound().build();
         }
