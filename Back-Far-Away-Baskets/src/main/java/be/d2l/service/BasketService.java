@@ -31,8 +31,12 @@ public class BasketService {
     }
 
     public Basket addProductToBasket(Basket basketToAdd)throws BasketAlreadyExistException {
-        if(repo.existsBasketByIdProductAndIdUser(basketToAdd.getIdProduct(), basketToAdd.getIdUser())) throw new BasketAlreadyExistException("This product is already in the basket");
-        basketToAdd.setQuantity(1);
+        if(repo.existsBasketByIdProductAndIdUser(basketToAdd.getIdProduct(), basketToAdd.getIdUser())){
+            basketToAdd = repo.findByIdProductAndIdUser(basketToAdd.getIdProduct(), basketToAdd.getIdUser());
+            basketToAdd.setQuantity(basketToAdd.getQuantity() + 1);
+        }
+        else
+            basketToAdd.setQuantity(1);
         return repo.save(basketToAdd);
     }
 }
