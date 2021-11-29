@@ -17,21 +17,22 @@ public class BasketService {
         return repo.findByIdUser(idUser);
     }
 
-    public void deleteProductOfBasket(int idProduct, int idUser) throws BasketNotFoundException {
-        if(!repo.existsBasketByIdProductAndIdUser(idProduct, idUser)) throw new BasketNotFoundException("Product not in the basket");
-        Basket basketToDelete = repo.findByIdProductAndIdUser(idProduct,idUser);
+    public void deleteProductOfBasket(Basket basketToDelete) throws BasketNotFoundException {
+        basketToDelete = repo.findByIdProductAndIdUser(basketToDelete.getIdProduct(), basketToDelete.getIdUser());
+        if(basketToDelete == null) throw new BasketNotFoundException("Product not in the basket");
         repo.deleteById(basketToDelete.getId());
     }
 
-    public Basket updateProductQuantity(int quantity,int idProduct, int idUser) throws BasketNotFoundException{
-        if(!repo.existsBasketByIdProductAndIdUser(idProduct, idUser)) throw new BasketNotFoundException("Product not in the basket");
-        Basket basketToUpdate = repo.findByIdProductAndIdUser(idProduct,idUser);
+    public Basket updateProductQuantity(int quantity,Basket basketToUpdate) throws BasketNotFoundException{
+        basketToUpdate = repo.findByIdProductAndIdUser(basketToUpdate.getIdProduct(), basketToUpdate.getIdUser());
+        if(basketToUpdate == null) throw new BasketNotFoundException("Product not in the basket");
         basketToUpdate.setQuantity(quantity);
         return repo.save(basketToUpdate);
     }
 
-    public Basket addProductToBasket(int idProduct, int idUser)throws BasketAlreadyExistException {
-        if(repo.existsBasketByIdProductAndIdUser(idProduct, idUser)) throw new BasketAlreadyExistException("This product is already in the basket");
-        return repo.save(new Basket(idUser,idProduct,1));
+    public Basket addProductToBasket(Basket basketToAdd)throws BasketAlreadyExistException {
+        if(repo.existsBasketByIdProductAndIdUser(basketToAdd.getIdProduct(), basketToAdd.getIdUser())) throw new BasketAlreadyExistException("This product is already in the basket");
+        basketToAdd.setQuantity(1);
+        return repo.save(basketToAdd);
     }
 }

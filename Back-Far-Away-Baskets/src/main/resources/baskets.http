@@ -4,21 +4,54 @@ GET http://localhost:9001/baskets/1
 GET http://localhost:9001/baskets/-1
 
 ###
-DELETE http://localhost:9001/baskets/1/1
 
-###
-DELETE http://localhost:9001/baskets/-1/1
-
-###
-DELETE http://localhost:9001/baskets/1/-1
-
-###
-PUT http://localhost:9001/baskets/2/1
+DELETE http://localhost:9001/baskets
 Content-Type: application/json
 
-40000
+{
+  "idUser" : 1,
+  "idProduct" : 1
+}
+
+###
+DELETE http://localhost:9001/baskets
+Content-Type: application/json
+
+{
+  "idUser" : -1,
+  "idProduct" : 1
+}
+###
+DELETE http://localhost:9001/baskets
+Content-Type: application/json
+
+{
+  "idUser" : 1,
+  "idProduct" : -1
+}
+###
+PUT http://localhost:9001/baskets/?quantity=4000
+Content-Type: application/json
+
+{
+  "idUser" : 1,
+  "idProduct" : 2
+}
+###
+PUT http://localhost:9001/baskets/?quantity=-4000
+Content-Type: application/json
+
+{
+  "idUser" : 1,
+  "idProduct" : 2
+}
 
 
 ###
-POST http://localhost:9001/baskets/2/1
+POST http://localhost:9001/baskets
+Content-Type: application/json
 
+{
+  "idUser" : 1,
+  "idProduct" : 3
+}

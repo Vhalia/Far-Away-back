@@ -22,39 +22,39 @@ public class BasketController {
         Iterable<Basket> baskets = service.findBasketOfUser(idUser);
         return ResponseEntity.ok(baskets);
     }
-    @DeleteMapping("/{idProduct}/{idUser}")
-    public ResponseEntity<String> deleteProductOfBasket(@PathVariable("idProduct") int idProduct, @PathVariable("idUser") int idUser){
-        if(idProduct < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + idProduct);
-        if(idUser < 0) return ResponseEntity.badRequest().body("Malformed id user " + idUser);
+    @DeleteMapping
+    public ResponseEntity<String> deleteProductOfBasket(@RequestBody Basket newBasket){
+        if(newBasket.getIdProduct() < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + newBasket.getIdProduct());
+        if(newBasket.getIdUser() < 0) return ResponseEntity.badRequest().body("Malformed id user " + newBasket.getIdUser());
         try{
-            service.deleteProductOfBasket(idProduct,idUser);
+            service.deleteProductOfBasket(newBasket);
         }catch (BasketNotFoundException e){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{idProduct}/{idUser}")
-    public ResponseEntity updateProductQuantity(@RequestBody int quantity, @PathVariable("idProduct") int idProduct, @PathVariable("idUser") int idUser){
-        if(idProduct < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + idProduct);
-        if(idUser < 0) return ResponseEntity.badRequest().body("Malformed id user " + idUser);
+    @PutMapping
+    public ResponseEntity updateProductQuantity(@RequestBody Basket newBasket, @RequestParam int quantity){
+        if(newBasket.getIdProduct() < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + newBasket.getIdProduct());
+        if(newBasket.getIdUser() < 0) return ResponseEntity.badRequest().body("Malformed id user " + newBasket.getIdUser());
         if(quantity < 0 ) return ResponseEntity.badRequest().body("The new quantity is malformed ");
         try{
-            return ResponseEntity.ok(service.updateProductQuantity(quantity,idProduct,idUser));
+            return ResponseEntity.ok(service.updateProductQuantity(quantity,newBasket));
         }catch (BasketNotFoundException e){
             return ResponseEntity.notFound().build();
         }
 
     }
 
-    @PostMapping("/{idProduct}/{idUser}")
-    public ResponseEntity addProductToBasket(@PathVariable("idProduct") int idProduct, @PathVariable("idUser") int idUser){
-        if(idProduct < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + idProduct);
-        if(idUser < 0) return ResponseEntity.badRequest().body("Malformed id user " + idUser);
+    @PostMapping
+    public ResponseEntity addProductToBasket(@RequestBody Basket newBasket){
+        if(newBasket.getIdProduct() < 0 ) return ResponseEntity.badRequest().body("Malformed id product " + newBasket.getIdProduct());
+        if(newBasket.getIdUser() < 0) return ResponseEntity.badRequest().body("Malformed id user " + newBasket.getIdUser());
         try{
-            return ResponseEntity.ok(service.addProductToBasket(idProduct,idUser));
+            return ResponseEntity.ok(service.addProductToBasket(newBasket));
         }catch (BasketAlreadyExistException e){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("This product is already in the basket");
         }
 
     }
