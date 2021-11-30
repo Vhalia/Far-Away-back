@@ -30,7 +30,11 @@ public class User {
 
     public boolean checkUserFields() {
         return this.getMail() != null && !this.getMail().isBlank() && !this.getMail().isEmpty()
-                && this.getPassword() != null && !this.getPassword().isEmpty() && !this.getPassword().isBlank();
+                && this.getPassword() != null && !this.getPassword().isEmpty() && !this.getPassword().isBlank()
+                && this.getSurname() != null && !this.getSurname().isEmpty() && !this.getSurname().isBlank()
+                && this.getFirstName() != null && !this.getFirstName().isEmpty() && !this.getFirstName().isBlank()
+                && this.getAddress() != null && !this.getAddress().isEmpty() && !this.getAddress().isBlank()
+                && this.getNickname() != null && !this.getNickname().isEmpty() && !this.getNickname().isBlank();
     }
 
 }

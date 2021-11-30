@@ -24,6 +24,30 @@ Content-Type: application/json
     "password" : "password"
 }
 
+### register user - missing information
+POST http://localhost:9002/users/register
+Content-Type: application/json
+
+{
+    "surname": "Le nom",
+    "firstName": "le prénom",
+    "password" : "password"
+}
+
+### register user - email already exists
+POST http://localhost:9002/users/register
+Content-Type: application/json
+
+{
+    "surname": "Le nom",
+    "firstName": "le prénom",
+    "nickname":"pseudoLa",
+    "address" : "Rue de la street 43, 4444 Bxl",
+    "mail": "pseudoLa@gmail.com",
+    "password" : "password"
+}
+
+
 
 ### login user
 POST http://localhost:9002/users/login
