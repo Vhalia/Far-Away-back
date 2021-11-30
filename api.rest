@@ -1,0 +1,9 @@
+GET http://localhost:9002/users
+###
+POST http://localhost:9002/users/login
+content-type: application/json
+
+{
+    "mail": "tomalebgdu69@gmail.com",
+    "password": "password"
+}

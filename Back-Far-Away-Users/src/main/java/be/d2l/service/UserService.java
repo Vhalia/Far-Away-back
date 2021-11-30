@@ -9,6 +9,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,17 +33,14 @@ public class UserService {
         repo.deleteById(id);
     }
 
-    public User updateUser(User user, int id){
+    public User createUser(User receivedUser){
+        User u = new User();
+        return repo.save(setUser(u,receivedUser));
+    }
+
+    public User updateUser(User receivedUser, int id){
         User u = repo.findById(id).orElseThrow(InternalError::new);
-        u.setSurname(user.getSurname());
-        u.setFirstName(user.getFirstName());
-        u.setNickname(user.getFirstName());
-        u.setBirthDate(user.getBirthDate());
-        u.setAddress(user.getAddress());
-        u.setMail(user.getMail());
-        u.setPassword(user.getPassword());
-        u.setAdmin(user.isAdmin());
-        return repo.save(u);
+        return repo.save(setUser(u,receivedUser));
     }
 
     public User getUserByMail(String mail){
@@ -53,10 +51,21 @@ public class UserService {
         User userFound = getUserByMail(mail);
         if (userFound == null)
              throw new UnauthorizedException("Email incorrect");
-        //TODO HASHER LE MDP & LE VERIFIER
-        if (!userFound.getPassword().equals(password))
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(encoder.matches(userFound.getPassword(), encoder.encode(password)))
             throw new UnauthorizedException("Password incorrect");
         return userFound;
+    }
+
+    private User setUser(User u,User receivedUser){
+        u.setSurname(receivedUser.getSurname());
+        u.setFirstName(receivedUser.getFirstName());
+        u.setNickname(receivedUser.getFirstName());
+        u.setBirthDate(receivedUser.getBirthDate());
+        u.setAddress(receivedUser.getAddress());
+        u.setMail(receivedUser.getMail());
+        u.setPassword(new BCryptPasswordEncoder().encode(receivedUser.getPassword()));
+        return u;
     }
 
 }

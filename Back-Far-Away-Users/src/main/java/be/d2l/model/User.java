@@ -22,7 +22,6 @@ public class User {
     private String address;
     private String mail;
     private String password;
-    private boolean admin;
 
     public User() {}
 

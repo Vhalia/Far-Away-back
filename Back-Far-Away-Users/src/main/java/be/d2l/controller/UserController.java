@@ -9,20 +9,19 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
     private UserService service;
-    /*@Autowired TODO
-    private CustomProperties props;*/
 
-    private final Algorithm jwtAlgorithm = Algorithm.HMAC256("FYy787YU936+g+uGTtUàtt)!9àt°UF");
+    private Algorithm jwtAlgorithm;
 
     @GetMapping
     public Iterable<User> getUsers(){
@@ -30,19 +29,44 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable("id") int id){
+    public ResponseEntity deleteUser(@PathVariable("id") int id){
+        if(id < 0) return ResponseEntity.badRequest().body("Malformed user id " + id);
         service.deleteUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user){
+        User createdUser = service.createUser(user);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdUser.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public User updateUser(User user, @PathVariable("id") int id){
-        return service.updateUser(user, id);
+    public ResponseEntity updateUser(@RequestBody User user, @PathVariable("id") int id){
+        if(id < 0) return ResponseEntity.badRequest().body("Malformed user id " + id);
+        if(user == null) return ResponseEntity.badRequest().body("Empty body");
+        service.updateUser(user, id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{mail}")
-    public User getUserByMail(@PathVariable("mail") String mail){
-        return service.getUserByMail(mail);
+    public ResponseEntity getUserByMail(@PathVariable("mail") String mail){
+        if(mail == null) return ResponseEntity.badRequest().body("Empty body");
+        service.getUserByMail(mail);
+        return ResponseEntity.ok().build();
     }
+
+    /*@PostMapping
+    public ResponseEntity register(@RequestBody User user){
+        if (user.getMail() == null || user.getMail().isBlank() || user.getMail().isEmpty()
+                || user.getPassword() == null || user.getPassword().isEmpty() || user.getPassword().isBlank())
+            return ResponseEntity.badRequest().build();
+
+        User createdUser = service.createUser(user);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdUser.getId()).toUri();
+        return ResponseEntity.ok().build();
+    }*/
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user, HttpServletResponse response) {
@@ -60,6 +84,11 @@ public class UserController {
             return ResponseEntity.status(401).build();
         }
         return ResponseEntity.ok(userFound);
+    }
+
+    public UserController(UserService service, CustomProperties props) {
+        this.service = service;
+        jwtAlgorithm = Algorithm.HMAC256(props.getJWTSecret());
     }
 
 }
