@@ -1,5 +1,7 @@
 package be.d2l.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -21,8 +23,14 @@ public class User {
     private Date birthDate;
     private String address;
     private String mail;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     public User() {}
+
+    public boolean checkUserFields() {
+        return this.getMail() != null && !this.getMail().isBlank() && !this.getMail().isEmpty()
+                && this.getPassword() != null && !this.getPassword().isEmpty() && !this.getPassword().isBlank();
+    }
 
 }

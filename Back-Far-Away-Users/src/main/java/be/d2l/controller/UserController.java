@@ -1,6 +1,8 @@
 package be.d2l.controller;
 
 import be.d2l.Exceptions.UnauthorizedException;
+import be.d2l.Exceptions.UserAlreadyExistsException;
+import be.d2l.Exceptions.UserNotFoundException;
 import be.d2l.config.CustomProperties;
 import be.d2l.model.User;
 import be.d2l.service.UserService;
@@ -23,21 +25,35 @@ public class UserController {
 
     private Algorithm jwtAlgorithm;
 
+    public UserController(UserService service, CustomProperties props) {
+        this.service = service;
+        jwtAlgorithm = Algorithm.HMAC256(props.getJWTSecret());
+    }
+
     @GetMapping
     public Iterable<User> getUsers(){
         return service.getUsers();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable("id") int id){
+    public ResponseEntity<String> deleteUser(@PathVariable("id") int id){
         if(id < 0) return ResponseEntity.badRequest().body("Malformed user id " + id);
-        service.deleteUser(id);
+        try {
+            service.deleteUser(id);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok().build();
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        User createdUser = service.createUser(user);
+    public ResponseEntity createUser(@RequestBody User user){
+        User createdUser = null;
+        try {
+            createdUser = service.createUser(user);
+        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.status(403).body("A user with email " + user.getMail() + " already exists");
+        }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdUser.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
@@ -46,27 +62,39 @@ public class UserController {
     public ResponseEntity updateUser(@RequestBody User user, @PathVariable("id") int id){
         if(id < 0) return ResponseEntity.badRequest().body("Malformed user id " + id);
         if(user == null) return ResponseEntity.badRequest().body("Empty body");
-        service.updateUser(user, id);
-        return ResponseEntity.ok().build();
+        User updatedUser = null;
+        try {
+            updatedUser = service.updateUser(user, id);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(updatedUser);
     }
 
     @GetMapping("/{mail}")
     public ResponseEntity getUserByMail(@PathVariable("mail") String mail){
-        if(mail == null) return ResponseEntity.badRequest().body("Empty body");
-        service.getUserByMail(mail);
-        return ResponseEntity.ok().build();
+        if(mail == null || mail.isEmpty() || mail.isBlank()) return ResponseEntity.badRequest().body("Empty body");
+        User userFound = service.getUserByMail(mail);
+        return ResponseEntity.ok().body(userFound);
     }
 
-    /*@PostMapping
-    public ResponseEntity register(@RequestBody User user){
-        if (user.getMail() == null || user.getMail().isBlank() || user.getMail().isEmpty()
-                || user.getPassword() == null || user.getPassword().isEmpty() || user.getPassword().isBlank())
-            return ResponseEntity.badRequest().build();
-
-        User createdUser = service.createUser(user);
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody User user, HttpServletResponse response){
+        if (!user.checkUserFields())
+            return ResponseEntity.badRequest().body("Missing mandatory information");
+        User createdUser = null;
+        try {
+            createdUser = service.createUser(user);
+        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.status(403).body("A user with email " + user.getMail() + " already exists");
+        }
+        String token = JWT.create().withIssuer("auth0").withClaim("user", createdUser.getId()).sign(jwtAlgorithm);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdUser.getId()).toUri();
-        return ResponseEntity.ok().build();
-    }*/
+        return ResponseEntity.created(location).build();
+    }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user, HttpServletResponse response) {
@@ -84,11 +112,6 @@ public class UserController {
             return ResponseEntity.status(401).build();
         }
         return ResponseEntity.ok(userFound);
-    }
-
-    public UserController(UserService service, CustomProperties props) {
-        this.service = service;
-        jwtAlgorithm = Algorithm.HMAC256(props.getJWTSecret());
     }
 
 }
