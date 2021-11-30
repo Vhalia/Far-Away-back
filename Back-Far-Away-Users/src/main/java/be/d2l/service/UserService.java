@@ -23,10 +23,6 @@ public class UserService {
     @Autowired
     private CustomProperties props;
 
-    /*private final Algorithm jwtAlgorithm = Algorithm.HMAC256(props.getJWTSecret());
-    String token = JWT.create().withIssuer("auth0").withClaim("user", user.getId()).sign(jwtAlgorithm);
-    private final JWTVerifier verifier = JWT.require(jwtAlgorithm).withIssuer("auth0").build();*/
-
     public Iterable<User> getUsers(){
         return repo.findAll();
     }
