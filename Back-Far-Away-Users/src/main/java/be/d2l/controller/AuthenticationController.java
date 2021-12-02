@@ -75,21 +75,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(node);
     }
 
-    /*@PostMapping("/createToken")
-    public ResponseEntity<String> createToken(@RequestBody User user) {
-        if(user == null || user.getMail() == null || user.getMail().isEmpty() || user.getMail().isBlank())
-            return ResponseEntity.badRequest().build();
-        String token = null;
-        try {
-            User userFound = service.getUserByMail(user.getMail());
-            token = JWT.create().withIssuer("auth0").withClaim("userId", userFound.getId())
-                    .withClaim("mail", userFound.getMail()).sign(jwtAlgorithm);
-        }catch(UserNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }catch(Exception e) {
-            return ResponseEntity.internalServerError().body("Error while creating the token");
-        }
-        return ResponseEntity.ok(token);
-    }*/
-
 }
