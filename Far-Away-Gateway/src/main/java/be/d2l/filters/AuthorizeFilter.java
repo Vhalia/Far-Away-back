@@ -23,7 +23,6 @@ public class AuthorizeFilter extends
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             HttpHeaders headers = exchange.getRequest().getHeaders();
-            System.out.println(headers.containsKey("Authorization"));
             if(!headers.containsKey("Authorization") || !config.verify(headers.getFirst("Authorization")))
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             return chain.filter(exchange).then();
@@ -45,7 +44,6 @@ public class AuthorizeFilter extends
 
         public boolean verify(String authorization) {
             try {
-                System.out.println(authorization);
                 verifier.verify(authorization);
             } catch (Exception e) {
                 return false;
