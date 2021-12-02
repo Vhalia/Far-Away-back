@@ -12,7 +12,7 @@ public class NoFilter extends
         AbstractGatewayFilterFactory<NoFilter.Config> {
 
     public NoFilter() {
-        super(Config.class);
+        super(NoFilter.Config.class);
     }
 
     @Override
