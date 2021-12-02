@@ -1,2 +1,4 @@
 
 INSERT INTO users (id,surname,first_name,nickname,birth_date,address,mail,password) VALUES (1,'Dorrekens','Thomas','Toma',DATE '2000-03-25','Rue des Genets 12, 1460 Ittre','tomalebgdu69@gmail.com','$2a$10$ipxHEOhIurxc5In8RenwwOVqDdRsSxDYDGcgd51KJsjjESPmb5GQm');
+INSERT INTO users (id,surname,first_name,nickname,birth_date,address,mail,password) VALUES (2,'Jsp','Louis','Thimotar',DATE '2001-11-22','Chemin du sentier 81, 1444 Nulle-Part-Sur-Loin','thimo.tar@skynet.com','$2a$10$ipxHEOhIurxc5In8RenwwOVqDdRsSxDYDGcgd51KJsjjESPmb5GQm');
+INSERT INTO users (id,surname,first_name,nickname,birth_date,address,mail,password) VALUES (3,'Bebou','Sergio','Squanchy',DATE '2000-01-14','Clos du Lapin 3, 1000 Bruxelles','lebgdu93@yahoo.fr','$2a$10$ipxHEOhIurxc5In8RenwwOVqDdRsSxDYDGcgd51KJsjjESPmb5GQm');
