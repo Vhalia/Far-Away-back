@@ -41,8 +41,6 @@ public class CommentService {
             commentToUpdate.setIsDeleted(updateComment.getIsDeleted());
         if(updateComment.getText() != null)
             commentToUpdate.setText(updateComment.getText());
-        if(updateComment.getRating() > 0)
-            commentToUpdate.setRating((updateComment.getRating()));
         return repo.save(commentToUpdate);
     }
 
