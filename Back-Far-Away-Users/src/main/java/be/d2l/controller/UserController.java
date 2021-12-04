@@ -78,6 +78,18 @@ public class UserController {
         return ResponseEntity.ok().body(userFound);
     }
 
+    @GetMapping("/withid/{id}")
+    public ResponseEntity getUserById(@PathVariable("id") int id){
+        if(id < 0) return ResponseEntity.badRequest().body("Malformed user id " + id);
+        User userFound;
+        try {
+            userFound = service.getUserById(id);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(userFound);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user, HttpServletResponse response){
         if (!user.checkUserFields())

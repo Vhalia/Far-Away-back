@@ -41,6 +41,8 @@ public class CommentService {
             commentToUpdate.setIsDeleted(updateComment.getIsDeleted());
         if(updateComment.getText() != null)
             commentToUpdate.setText(updateComment.getText());
+        if(updateComment.getRating() > 0)
+            commentToUpdate.setRating((updateComment.getRating()));
         return repo.save(commentToUpdate);
     }
 
@@ -50,7 +52,12 @@ public class CommentService {
 
     public double averageRatingOfCommentByIdProduct(int idProduct) throws CommentNotFoundException {
         List<Comment> commentsOfProduct = (List<Comment>)repo.findAllByIdProductOrderByCreationDateDesc(idProduct);
-        if(commentsOfProduct == null || commentsOfProduct.isEmpty()) throw new CommentNotFoundException("No comment for product with id " + idProduct);
+        if(commentsOfProduct == null || commentsOfProduct.isEmpty()) return -1;
         return commentsOfProduct.stream().mapToInt(Comment::getRating).average().orElseThrow(() -> new ArithmeticException("Average is not a double"));
+    }
+
+    public Comment findByCommentId(int idComment) throws CommentNotFoundException {
+        Comment c = repo.findById(idComment).orElseThrow(() -> new CommentNotFoundException("User with id " + idComment + " not found")) ;
+        return c;
     }
 }

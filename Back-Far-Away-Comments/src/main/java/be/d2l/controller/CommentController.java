@@ -90,4 +90,16 @@ public class CommentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("commentbyid/{idComment}")
+    public ResponseEntity findCommentById(@PathVariable("idComment") int idComment) {
+        if(idComment < 0) return ResponseEntity.badRequest().body("Malformed comment id");
+        try{
+            return ResponseEntity.ok(service.findByCommentId(idComment));
+        } catch (CommentNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
 }

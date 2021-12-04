@@ -6,13 +6,11 @@ import be.d2l.Exceptions.UserNotFoundException;
 import be.d2l.config.CustomProperties;
 import be.d2l.model.User;
 import be.d2l.repo.UserRepository;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -45,6 +43,11 @@ public class UserService {
 
     public User getUserByMail(String mail){
         return repo.findByMail(mail);
+    }
+
+    public User getUserById(int id) throws UserNotFoundException {
+        User u = repo.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+        return u;
     }
 
     public User checkUser(String mail, String password) throws UnauthorizedException {
