@@ -9,6 +9,7 @@ import be.d2l.service.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,11 +24,8 @@ public class UserController {
 
     private UserService service;
 
-    private Algorithm jwtAlgorithm;
-
-    public UserController(UserService service, CustomProperties props) {
+    public UserController(UserService service) {
         this.service = service;
-        jwtAlgorithm = Algorithm.HMAC256(props.getJWTSecret());
     }
 
     @GetMapping
@@ -115,15 +113,10 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         User userFound = null;
         try {
-            userFound = service.checkUser(user.getMail(), user.getPassword());
-            String token = JWT.create().withIssuer("auth0").withClaim("user", userFound.getId()).sign(jwtAlgorithm);
-            Cookie cookie = new Cookie("token", token);
-            cookie.setHttpOnly(true);
-            response.addCookie(cookie);
-        } catch (UnauthorizedException e) {
-            return ResponseEntity.status(401).build();
+            userFound = service.getUserByMail(mail);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(userFound);
+        return ResponseEntity.ok().body(userFound);
     }
-
 }

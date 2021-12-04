@@ -41,8 +41,10 @@ public class UserService {
         return repo.save(setUser(u,receivedUser));
     }
 
-    public User getUserByMail(String mail){
-        return repo.findByMail(mail);
+    public User getUserByMail(String mail) throws UserNotFoundException {
+        User userFound = repo.findByMail(mail);
+        if (userFound == null) throw new UserNotFoundException("User with email " + mail);
+        return userFound;
     }
 
     public User getUserById(int id) throws UserNotFoundException {
@@ -51,9 +53,12 @@ public class UserService {
     }
 
     public User checkUser(String mail, String password) throws UnauthorizedException {
-        User userFound = getUserByMail(mail);
-        if (userFound == null)
-             throw new UnauthorizedException("Email incorrect");
+        User userFound = null;
+        try {
+            userFound = getUserByMail(mail);
+        } catch (UserNotFoundException e) {
+            throw new UnauthorizedException("Email incorrect");
+        }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(!encoder.matches(password, userFound.getPassword()))
             throw new UnauthorizedException("Password incorrect");
