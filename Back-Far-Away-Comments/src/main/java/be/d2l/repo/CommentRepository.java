@@ -9,6 +9,6 @@ public interface CommentRepository extends CrudRepository<Comment, Integer>{
     public Iterable<Comment> findAllByOrderByCreationDateDesc();
     public Iterable<Comment> findAllByIdProductAndIdUserNotOrderByCreationDateDesc(int idProduct, int idUser);
     public Iterable<Comment> findAllByIdProductAndIdUserOrderByCreationDateDesc(int idProduct, int idUser);
-    public Iterable<Comment> findAllByIdProductOrderByCreationDateDesc(int idProduct);
+    public Iterable<Comment> findAllByIdProductAndIsDeletedFalseOrderByCreationDateDesc(int idProduct);
     public int countByIdProduct(int idProduct);
 }

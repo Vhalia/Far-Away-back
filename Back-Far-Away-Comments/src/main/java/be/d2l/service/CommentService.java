@@ -21,7 +21,7 @@ public class CommentService {
     }
 
     public Iterable<Comment> findAllByIdProduct(int idProduct) {
-        return repo.findAllByIdProductOrderByCreationDateDesc(idProduct);
+        return repo.findAllByIdProductAndIsDeletedFalseOrderByCreationDateDesc(idProduct);
     }
 
     public Iterable<Comment> findAllByIdProductAndIdUser(int idProduct, int idUser) {
@@ -49,7 +49,7 @@ public class CommentService {
     }
 
     public double averageRatingOfCommentByIdProduct(int idProduct) throws CommentNotFoundException {
-        List<Comment> commentsOfProduct = (List<Comment>)repo.findAllByIdProductOrderByCreationDateDesc(idProduct);
+        List<Comment> commentsOfProduct = (List<Comment>)repo.findAllByIdProductAndIsDeletedFalseOrderByCreationDateDesc(idProduct);
         if(commentsOfProduct == null || commentsOfProduct.isEmpty()) return -1;
         return commentsOfProduct.stream().mapToInt(Comment::getRating).average().orElseThrow(() -> new ArithmeticException("Average is not a double"));
     }
